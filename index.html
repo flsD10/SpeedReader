@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- made by @flsD10 on github-->
+    <head id="head">
+        <meta name ="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Speed Reader</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    </head>
+    <body id="body" style="max-height: 100vh;">
+            <header style="font-size: 50px;" id="MainHeader">
+                Speeeeeeeed reader
+            </header>
+            <textarea placeholder="Enter a Paragraph" id="area1" rows="15" style="font-size: 25px; width: 1000px ; height: 250px"></textarea>
+            <input oninput="document.getElementById('wpm').value = document.getElementById('myRange').value" type="range" min="60" max="800" value="250" class="slider" id="myRange"style="width: 300px">
+            <input oninput= "document.getElementById('myRange').value = document.getElementById('wpm').value" type="text"value="250"id="wpm">
+            <button onclick = "submit()" style="border-radius:12px;font-size: 50px;border: 100px;margin:10px;"id="submit">Submit</button>
+
+    </body>
+
+<script type="text/javascript">
+    var wpm;
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("wpm");
+    var run = true;
+    function deleteEverything(){
+        var element1 = document.getElementById('MainHeader');
+        var element2 = document.getElementById('area1');
+        var element3 = document.getElementById('submit');
+        var element4 = document.getElementById('myRange');
+        var element5 = document.getElementById('wpm');
+        element1.remove();
+        element2.remove();
+        element3.remove();
+        element4.remove();
+        element5.remove();
+    }
+    function textHTML(thing){
+        var html = "<b style=\"font-size: 200px;\">" + thing.toString() + "</b>";
+        return html;
+    }
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    async function print(words, ms){
+        var body = document.getElementById('body');
+        words = words.split(" ");
+        for (const word of words){
+            if ((word.replace(/\s/g, '') !== "" || undefined) && (run)){
+                body.insertAdjacentHTML("beforeend", textHTML(word));
+                await sleep(ms);
+                body.innerHTML = "";
+            }
+        }
+    }
+    function cancel(wpminput){
+        if (wpminput === undefined){
+            wpminput = (60000 / wpm);
+        }
+        run = false;
+        body.innerHTML = "";
+        body.insertAdjacentHTML("beforebegin","<header style=\"font-size: 50px;\" id=\"MainHeader\">Speeeeeeeed reader</header><textarea placeholder=\"Enter a Paragraph\" id=\"area1\" rows=\"15\" style=\"font-size: 25px; width: 1000px ; height: 250px\"></textarea><button onclick = \"submit()\" style=\"border-radius:12px;font-size: 50px;border: 100px;margin:10px;\"id=\"submit\">Submit</button><input type=\"range\" oninput=\"document.getElementById('wpm').value = document.getElementById('myRange').value\"min=\"60\" max=\"800\" value=\"" + wpminput + "\" class=\"slider\" id=\"myRange\"style=\"width: 300px\"><input type=\"text\"oninput=\"document.getElementById('myRange').value = document.getElementById('wpm').value\"value=\"" + wpminput+ "\"id=\"wpm\">");
+        button = document.getElementById('cancel');
+        button.remove();
+    }
+    async function main(words, ms){
+        run = true;
+        var body = document.getElementById('body');
+        body.style.display = "flex";
+        body.style.justifyContent = "center";
+        body.style.textAlign= "center";
+        body.style.marginTop = "18%";
+        body.insertAdjacentHTML("beforeend", textHTML(3));
+        await sleep(1000);
+        body.innerHTML = "";
+        body.insertAdjacentHTML("beforeend", textHTML(2));
+        await sleep(1000);
+        body.innerHTML = "";
+        body.insertAdjacentHTML("beforeend", textHTML(1));
+        await sleep(1000);
+        body.innerHTML = "";
+        await print(words, ms);
+        if (run === true){
+            cancel(60000 / ms);
+        }
+        document.getElementById('area1').innerHTML = words;
+    }
+    function submit(){
+        var text1 = document.getElementById('area1').value;
+        wpm = parseInt(60000) / parseInt(document.getElementById('wpm').value);
+        deleteEverything();
+        var head= document.getElementById('head');
+        var cancelHTML  = "<button onclick = \"cancel()\" style=\"border-radius:12px;font-size: 50px;border: 100px;margin:10px;\"id=\"cancel\">Cancel</button>"
+        head.insertAdjacentHTML("afterend",cancelHTML);
+        main(text1, wpm);
+
+
+    }
+</script>
+</html>
